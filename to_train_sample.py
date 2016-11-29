@@ -1,4 +1,5 @@
 import mido_encodage as me
+import numpy as np
 
 def train_sample(midiFileList):
 	sampleList = []
