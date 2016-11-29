@@ -5,7 +5,7 @@ def scanDir(path="./",directory="."):
 	midiSample = []
 	for file in os.listdir(path+directory):
 		if os.path.isdir(path+directory+"/"+file):
-			scanDir(path+directory+"/",file,action)
+			scanDir(path+directory+"/",file)
 		else:
 			addMidiToList(path+directory+"/"+file,midiSample)
 	return midiSample
