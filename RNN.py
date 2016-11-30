@@ -16,7 +16,7 @@ print("Data set splitted into train and test data")
 model = SimpleSeq2Seq(input_shape=(len(sample[0]),128),output_dim=128,output_length=len(sample[0]))
 
 print(":: COMPILING MODEL")
-model.compile(loss='mse',optimizer='rmsproper')
+model.compile(loss='mse',optimizer='rmsprop')
 
 print(":: FITTING MODEL")
 model.fit(X_train,y_train,nb_epoch=5)
