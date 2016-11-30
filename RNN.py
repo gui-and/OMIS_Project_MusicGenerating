@@ -9,7 +9,7 @@ sample = preprocessMidi("MIDI/test")
 X = np.array(sample)
 y = np.array(sample)
 
-X_train,y_train,X_test,y_test = train_test_split(X,y,test_size=0.20)
+X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.20)
 
 print("Data set splitted into train and test data")
 
