@@ -2,7 +2,7 @@ from mido import MidiFile,MidiTrack,MetaMessage,Message
 import numpy as np
 from array import array
 
-def parseMidi(midiFile):
+def parseMidi(midiFile,allowMultipleNotesOnTempo=False):
 	chan_max = -1
 	
 	channels = []
@@ -10,6 +10,7 @@ def parseMidi(midiFile):
 
 	mid = MidiFile(midiFile)
 	for track in mid.tracks:
+		alreadyANoteOnTempo = [False] * (chan_max+1)
 		for message in track:
 			if isinstance(message,MetaMessage):
 				metas.append(message)
@@ -20,23 +21,57 @@ def parseMidi(midiFile):
 					track = MidiTrack()
 					mid.tracks.append(track)
 					channels.append(mid)
+					alreadyANoteOnTempo.append(False)
 					chan_max+=1
+				if message.type == 'note_on' and message.velocity != 0 and message.time == 0 and alreadyANoteOnTempo[chan]:
+					if not allowMultipleNotesOnTempo:
+						raise Exception("multiple notes on a tempo")
+				elif message.type == 'note_on' and message.velocity != 0:
+					alreadyANoteOnTempo[chan] = True
+				elif message.time > 0:
+					alreadyANoteOnTempo[chan] = False
 				channels[chan].tracks[0].append(message)
 	return (channels,metas)
 
-def note_egal_vect(mid):
+def note_egal_vect(mid,max_len=0,allowNoteOnSeveralTempos=False):
 	notevect = np.zeros(128,np.int)
 	listnote=[]
+	listsample=[]
+	counter=0
 	for message in mid.tracks[0]:
 		if not isinstance(message,MetaMessage):
-			if message.time > 0:
-				for i in range(message.time):
+			if allowNoteOnSeveralTempos:
+				if message.time > 0:
+					for i in range(message.time):
+						listnote.append(np.array(notevect))
+						counter+=1
+						if max_len > 0 and counter >= max_len:
+							listsample.append(listnote)
+							listnote=[]
+							counter=0
+				if message.type == 'note_on' and message.velocity != 0:
+					notevect[message.note]=1
+				if message.type == 'note_off' or (message.type == 'note_on' and message.velocity == 0):
+					notevect[message.note]=0
+			else:
+				if message.time > 0:
 					listnote.append(np.array(notevect))
-			if message.type == 'note_on' and message.velocity != 0:
-				notevect[message.note]=1
-			if message.type == 'note_off' or (message.type == 'note_on' and message.velocity == 0):
-				notevect[message.note]=0
-	return listnote
+					counter+=1
+					notevect = np.zeros(128,np.int)
+					if max_len > 0 and counter >= max_len:
+						listsample.append(listnote)
+						listnote=[]
+						counter=0
+				if message.type == 'note_on' and message.velocity != 0:
+					notevect[message.note]=1
+	else:
+		try:
+			if message.time == 0:
+				listnote.append(notevect)
+		except NameError:
+			raise Exception("Empty MIDI file")
+	listsample.append(listnote)
+	return listsample
 
 def getMidiFile(midiFile):
 	return MidiFile(midiFile)
