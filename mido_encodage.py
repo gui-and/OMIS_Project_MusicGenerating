@@ -10,25 +10,26 @@ def parseMidi(midiFile,allowMultipleNotesOnTempo=False):
 
 	mid = MidiFile(midiFile)
 	for track in mid.tracks:
-		alreadyANoteOnTempo = False
+		alreadyANoteOnTempo = [False] * (chan_max+1)
 		for message in track:
 			if isinstance(message,MetaMessage):
 				metas.append(message)
 			elif message.type != 'sysex':
-				if message.type == 'note_on' and message.velocity != 0 and message.time == 0 and alreadyANoteOnTempo:
-					if not allowMultipleNotesOnTempo:
-						raise Exception("multiple notes on a tempo")
-				elif message.type == 'note_on' and message.velocity != 0:
-					alreadyANoteOnTempo = True
-				elif message.time > 0:
-					alreadyANoteOnTempo = False
 				chan = message.channel
 				while chan > chan_max:
 					mid = MidiFile()
 					track = MidiTrack()
 					mid.tracks.append(track)
 					channels.append(mid)
+					alreadyANoteOnTempo.append(False)
 					chan_max+=1
+				if message.type == 'note_on' and message.velocity != 0 and message.time == 0 and alreadyANoteOnTempo[chan]:
+					if not allowMultipleNotesOnTempo:
+						raise Exception("multiple notes on a tempo")
+				elif message.type == 'note_on' and message.velocity != 0:
+					alreadyANoteOnTempo[chan] = True
+				elif message.time > 0:
+					alreadyANoteOnTempo[chan] = False
 				channels[chan].tracks[0].append(message)
 	return (channels,metas)
 
