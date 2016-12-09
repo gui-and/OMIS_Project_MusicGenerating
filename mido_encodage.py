@@ -55,7 +55,7 @@ def note_egal_vect(mid,max_len=0,allowNoteOnSeveralTempos=False):
 					notevect[message.note]=0
 			else:
 				if message.time > 0:
-					listenote.append(np.array(notevect))
+					listnote.append(np.array(notevect))
 					counter+=1
 					notevect = np.zeros(128,np.int)
 					if max_len > 0 and counter >= max_len:
