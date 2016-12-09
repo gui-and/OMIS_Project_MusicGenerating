@@ -6,7 +6,7 @@ import numpy as np
 print(":: IMPORTING DATA SET")
 sample = preprocessMidi("MIDI/test",verbose=1,removeExceptions=False,max_sample_len=100,allowMultipleNotesOnTempo=False,allowNoteOnSeveralTempos=False)
 
-if not sample:
+if len(sample) == 0:
   raise Exception("The sample is empty.")
 
 X = np.array(sample)
