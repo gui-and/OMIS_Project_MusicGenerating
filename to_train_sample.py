@@ -7,17 +7,16 @@ def train_sample(midiFileList,max_sample_len=0,allowNoteOnSeveralTempos=False):
 	counter = 0
 	print(":: Formatting MIDI files")
 	for midiFile in midiFileList:
-		encodedMidi = me.note_egal_vect(midiFile,max_len=max_sample_len,allowNoteOnSeveralTempos=allowNoteOnSeveralTempos)
+		encodedMidi = me.note_egal_int(midiFile,max_len=max_sample_len,allowNoteOnSeveralTempos=allowNoteOnSeveralTempos)
 		for subsample in encodedMidi:
 			max_len = max(max_len,len(subsample))
 			sampleList.append(subsample)
 			counter+=1
-	print("Sample shape = "+str(counter)+":"+str(max_len)+":128")
-	sampleArray = np.zeros((counter,max_len,128),np.int)
+	print("Sample shape = "+str(counter)+":"+str(max_len)+":1")
+	sampleArray = np.zeros((counter,max_len),np.int)
 	print(":: Formatting sample")
 	for mid in range(counter):
 		for tempo in range(len(sampleList[mid])):
-			for note in range(128):
-				sampleArray[mid,tempo,note] = sampleList[mid][tempo][note]
+			sampleArray[mid,tempo] = sampleList[mid][tempo]
 	print(":: Formatted")
 	return sampleArray
