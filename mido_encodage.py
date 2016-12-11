@@ -73,6 +73,43 @@ def note_egal_vect(mid,max_len=0,allowNoteOnSeveralTempos=False):
 	listsample.append(listnote)
 	return listsample
 
+def note_egal_int(mid,max_len=0,allowNoteOnSeveralTempos=False):
+	note = None
+	listnote=[]
+	listsample=[]
+	counter=0
+	for message in mid.tracks[0]:
+		if not isinstance(message,MetaMessage):
+			if allowNoteOnSeveralTempos:
+				if message.time > 0:
+					for i in range(message.time):
+						listnote.append(note)
+						counter+=1
+						if max_len > 0 and counter >= max_len:
+							listsample.append(listnote)
+							listnote=[]
+							counter=0
+				if message.type == 'note_on' and message.velocity != 0:
+					note=message.note
+			else:
+				if message.time > 0:
+					listnote.append(note)
+					counter+=1
+					if max_len > 0 and counter >= max_len:
+						listsample.append(listnote)
+						listnote=[]
+						counter=0
+				if message.type == 'note_on' and message.velocity != 0:
+					note=message.note
+	else:
+		try:
+			if message.time == 0:
+				listnote.append(note)
+		except NameError:
+			raise Exception("Empty MIDI file")
+	listsample.append(listnote)
+	return listsample
+
 def getMidiFile(midiFile):
 	return MidiFile(midiFile)
 
