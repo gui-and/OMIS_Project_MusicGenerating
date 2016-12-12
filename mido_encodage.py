@@ -74,7 +74,7 @@ def note_egal_vect(mid,max_len=0,allowNoteOnSeveralTempos=False):
 	return listsample
 
 def note_egal_int(mid,max_len=0,allowNoteOnSeveralTempos=False):
-	note = None
+	note = 0
 	listnote=[]
 	listsample=[]
 	counter=0
