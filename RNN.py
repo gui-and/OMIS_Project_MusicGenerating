@@ -12,7 +12,7 @@ if len(sample) == 0:
   raise Exception("The sample is empty.")
 
 X = np.array(sample)
-y = np.array(sample)
+y = np.concatenate((sample,sample),axis=2) # Can't have a 1-dim output
 
 X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.20)
 
@@ -20,7 +20,7 @@ print("Data set splitted into train and test data")
 
 model = Sequential()
 model.add(Embedding(input_dim=128,output_dim=128))
-model.add(SimpleSeq2Seq(input_dim=128,output_dim=1,output_length=len(sample[0])))
+model.add(SimpleSeq2Seq(input_dim=128,output_dim=2,output_length=len(sample[0])))
 
 print(":: COMPILING MODEL")
 model.compile(loss='mse',optimizer='rmsprop')
