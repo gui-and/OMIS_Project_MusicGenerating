@@ -1,6 +1,8 @@
 from preprocess import preprocessMidi
 from seq2seq.models import SimpleSeq2Seq
 from sklearn.model_selection import train_test_split
+from keras.models import Sequential
+from keras.layers.embeddings import Embedding
 import numpy as np
 
 print(":: IMPORTING DATA SET")
@@ -16,7 +18,9 @@ X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.20)
 
 print("Data set splitted into train and test data")
 
-model = SimpleSeq2Seq(input_shape=(len(sample[0]),128),output_dim=128,output_length=len(sample[0]))
+model = Sequential()
+model.add(Embedding(input_dim=128,output_dim=128,input_length=len(sample[0])))
+model.add(SimpleSeq2Seq(input_shape=(len(sample[0]),128),output_dim=128,output_length=len(sample[0])))
 
 print(":: COMPILING MODEL")
 model.compile(loss='mse',optimizer='rmsprop')
