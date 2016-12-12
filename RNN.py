@@ -6,13 +6,12 @@ from keras.layers.embeddings import Embedding
 import numpy as np
 
 print(":: IMPORTING DATA SET")
-sample = preprocessMidi("MIDI/test",verbose=1,removeExceptions=False,max_sample_len=100,allowMultipleNotesOnTempo=False,allowNoteOnSeveralTempos=False)
+X,y = preprocessMidi("MIDI/test",verbose=1,removeExceptions=False,max_sample_len=100,allowMultipleNotesOnTempo=False,allowNoteOnSeveralTempos=False)
 
-if len(sample) == 0:
+if len(X) == 0:
   raise Exception("The sample is empty.")
 
-X = np.array(sample)
-y = np.concatenate((sample,sample),axis=2) # Can't have a 1-dim output
+y = np.concatenate((y,y),axis=2) # Can't have a 1-dim output
 
 X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.20)
 
