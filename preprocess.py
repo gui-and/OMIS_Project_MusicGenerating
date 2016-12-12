@@ -6,8 +6,7 @@ def preprocessMidi(directory="130000_Pop_Rock_Classical_Videogame_EDM_MIDI_Archi
                    allowMultipleNotesOnTempo=False,allowNoteOnSeveralTempos=False):
 	print(":: Pre-processing MIDI files from "+directory)
 	midiList = scanDir(directory=directory,verbose=verbose,removeExceptions=removeExceptions,allowMultipleNotesOnTempo=allowMultipleNotesOnTempo)
-	sample = train_sample(midiList,max_sample_len=max_sample_len,allowNoteOnSeveralTempos=allowNoteOnSeveralTempos)
-	return sample
+	return train_sample(midiList,max_sample_len=max_sample_len,allowNoteOnSeveralTempos=allowNoteOnSeveralTempos)
 
 if __name__ == "__main__":
 	print("Pre-Processing of Midi files")
