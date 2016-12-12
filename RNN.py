@@ -19,7 +19,7 @@ print("Data set splitted into train and test data")
 
 model = Sequential()
 model.add(Embedding(input_dim=128,output_dim=128))
-model.add(SimpleSeq2Seq(input_dim=128,output_dim=2,output_length=len(sample[0])))
+model.add(SimpleSeq2Seq(input_dim=128,output_dim=2,output_length=len(X[0])))
 
 print(":: COMPILING MODEL")
 model.compile(loss='mse',optimizer='rmsprop')
