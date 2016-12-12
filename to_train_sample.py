@@ -13,10 +13,12 @@ def train_sample(midiFileList,max_sample_len=0,allowNoteOnSeveralTempos=False):
 			sampleList.append(subsample)
 			counter+=1
 	print("Sample shape = "+str(counter)+":"+str(max_len)+":1")
-	sampleArray = np.zeros((counter,max_len,1),np.int)
+	sampleArray_X = np.zeros((counter,max_len),np.int)
+	sampleArray_y = np.zeros((counter,max_len,1),np.int)
 	print(":: Formatting sample")
 	for mid in range(counter):
 		for tempo in range(len(sampleList[mid])):
-			sampleArray[mid,tempo] = sampleList[mid][tempo]
+			sampleArray_X[mid,tempo] = sampleList[mid][tempo]
+			sampleArray_y[mid,tempo] = sampleList[mid][tempo]
 	print(":: Formatted")
-	return sampleArray
+	return sampleArray_X,sampleArray_y
