@@ -78,7 +78,7 @@ vae.fit(x_train, x_train,
         shuffle=True,
         nb_epoch=nb_epoch,
         batch_size=batch_size,
-        verbose=0,
+        verbose=2,
         validation_data=(x_test, x_test))
 
 # build a model to project inputs on the latent space
@@ -152,7 +152,7 @@ y[:n,1] = 1
 y[n:,0] = 1
 
 make_trainable(discriminator,True)
-discriminator.fit(X,y, nb_epoch=nb_epoch, batch_size=128)
+discriminator.fit(X,y, nb_epoch=1, batch_size=128)
 y_hat = discriminator.predict(X)
 
 
